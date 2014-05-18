@@ -1,0 +1,129 @@
+# French translations for PROJECT.
+# Copyright (C) 2014 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2014-05-17 16:20+0200\n"
+"PO-Revision-Date: 2014-05-17 11:48+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#: main.py:98
+msgid "english-text"
+msgstr "Texte FRANCAIS"
+
+#: escpos/driver.py:132
+msgid "Connected to %s"
+msgstr "Connecté(e) à %s"
+
+#: escpos/driver.py:137
+msgid "Printer Not Found"
+msgstr "Imprimante non trouvée"
+
+#: escpos/driver.py:212
+msgid "PosBox Status"
+msgstr "Status de la PosBox"
+
+#: escpos/driver.py:217
+msgid ""
+"ERROR: Could not connect to LAN\n"
+"\n"
+"Please check that the PosBox is correc-\n"
+"tly connected with a network cable,\n"
+" that the LAN is setup with DHCP, and\n"
+"that network addresses are available"
+msgstr ""
+"ERREUR : Impossible de se connecter au\n"
+"réseau local : Vérifiez si la PosBox est\n"
+"correctement connectée au cable réseau,\n"
+"que le réseau local est en DHCP,\n"
+"et que les adresses réseaux sont \n"
+"disponible."
+
+#: escpos/driver.py:225
+msgid "IP Address:"
+msgstr "Adresse IP :"
+
+#: escpos/driver.py:227
+msgid "IP Addresses:"
+msgstr "Adresses IP :"
+
+#: escpos/driver.py:232
+msgid "Homepage:"
+msgstr "Page d'accueil :"
+
+#: escpos/driver.py:288
+msgid "Tel: "
+msgstr "Tél : "
+
+#: escpos/driver.py:290
+msgid "VAT: "
+msgstr "TVA Intracom : "
+
+#: escpos/driver.py:299
+msgid "Served by "
+msgstr "Servi par "
+
+#: escpos/driver.py:321
+msgid "Subtotal"
+msgstr "Sous-Total"
+
+#: escpos/driver.py:331
+msgid "         TOTAL"
+msgstr "         TOTAL"
+
+#: escpos/driver.py:344
+msgid "        CHANGE"
+msgstr "       MONNAIE"
+
+#: escpos/driver.py:352
+msgid "Discounts"
+msgstr "Remises"
+
+#: templates/status.html:26
+msgid "Light-PosBox Status For Odoo"
+msgstr "Statut de la Light-PosBox Pour Odoo"
+
+#: templates/status.html:45
+msgid "Hardware Status"
+msgstr "Etat du Matériel"
+
+#: templates/status.html:46
+msgid "The list of enabled drivers and their status"
+msgstr "La lise des pilotes activés avec leur état"
+
+#: templates/status.html:49
+msgid "Connected"
+msgstr "Connecté(e)"
+
+#: templates/status.html:51
+msgid "Connecting"
+msgstr "En cours de connexion"
+
+#: templates/status.html:53
+msgid "Disconnected"
+msgstr "Déconnecté(e)"
+
+#: templates/status.html:55
+msgid "Error"
+msgstr "En Erreur"
+
+#: templates/status.html:65
+msgid "Connected Devices (USB)"
+msgstr "Périphériques connectés (USB)"
+
+#: templates/status.html:66
+msgid "The list of connected USB devices as seen by the posbox"
+msgstr ""
+"La liste des périphériques USB connectés, tels qu'ils sont détectés par "
+"la Light-PosBox"
+

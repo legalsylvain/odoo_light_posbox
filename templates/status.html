@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<!-- ********************************************************************** -->
+<!--    Light-PosBox Software for Odoo                                      -->
+<!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
+<!--    @author Sylvain LE GAL (https://twitter.com/legalsylvain)           -->
+<!--    @author Sébastien BEAU <sebastien.beau@akretion.com>                -->
+
+<!--    Some parts of the code come from Odoo project                       -->
+<!--    Copyright (C) Odoo SA                                               -->
+
+<!--This program is free software: you can redistribute it and/or modify    -->
+<!--it under the terms of the GNU Affero General Public License as          -->
+<!--published by the Free Software Foundation, either version 3 of the      -->
+<!--License, or (at your option) any later version.                         -->
+
+<!--This program is distributed in the hope that it will be useful,         -->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
+<!--GNU Affero General Public License for more details.                     -->
+
+<!--You should have received a copy of the GNU Affero General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+<!-- ********************************************************************** -->
+<html>
+    <head>
+        <title>{{ _('Light-PosBox Status For Odoo')}}</title>
+        <style>
+        body {
+            width: 760px;
+            margin: 10px auto;
+            font-family: sans-serif;
+            text-align: justify;
+            color: #6B6B6B;
+        }
+        .device {
+            border-bottom: solid 1px rgb(216,216,216);
+            padding: 9px;
+        }
+        .device:nth-child(2n) {
+            background:rgb(240,240,240);
+        }
+        </style>
+    </head>
+    <body>
+        <h1>{{ _('Hardware Status')}}</h1>
+        <p>{{ _('The list of enabled drivers and their status')}}</p>
+{% for driver in statuses %}
+    {% if statuses[driver]['state']['status']== 'connected' %}
+            <h2 style="color:green;">{{driver}} : {{ _('Connected')}}</h2>
+    {% elif statuses[driver]['state']['status']== 'connecting' %}
+            <h2 style="color:blue;">{{driver}} : {{ _('Connecting')}}</h2>
+    {% elif statuses[driver]['state']['status']== 'disconnected' %}
+            <h2 style="color:brown;">{{driver}} : {{ _('Disconnected')}}</h2>
+    {% elif statuses[driver]['state']['status']== 'error' %}
+            <h2 style="color:red;">{{driver}} : {{ _('Error')}}</h2>
+    {% else %}
+            <h2 style="color:black;">{{driver}} : {{statuses[driver]['state']['status']}}</h2>
+    {% endif %}
+    {% if statuses[driver]['image'] %}
+            <img src="{{statuses[driver]['image']}}" style="width:200px; height:200px;" />
+    {% endif %}
+                <ul>
+    {% for message in statuses[driver]['state']['messages'] %}
+                <li>{{message}}</li>
+    {% endfor %}
+                </ul>
+{% endfor %}
+        <h1>{{ _('Connected Devices (USB)')}}</h1>
+        <p>{{ _('The list of connected USB devices as seen by the posbox')}}</p>
+        <div class="devices">
+{% for device in devices %}
+            <div class="device" data-device="{{device}}">{{device[device.find('ID')+2:]}}</div>
+{% endfor %}
+        </div>
+    </body>
+</html>
