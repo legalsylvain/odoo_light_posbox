@@ -59,6 +59,9 @@ if app.config['PRINT_STATUS_START']:
 printerDriver.get_escpos_printer()
 drivers['escpos'] = printerDriver
 
+# Constant Section
+_IMAGE_EXTENSION = '.png'
+
 # Function Section
 def get_status():
     statuses = {}
@@ -96,10 +99,9 @@ def status_http():
     """
     statuses = {}
     for driver in drivers:
-        import flask
         statuses[driver] = {
             'state': drivers[driver].get_status(),
-            'image': 'static/' + drivers[driver].get_image_name(),
+            'image': 'static/' + driver + '/images/' + drivers[driver].get_vendor_product() + _IMAGE_EXTENSION,
         }
     devices = commands.getoutput("lsusb").split('\n')
     return render_template(
@@ -107,8 +109,6 @@ def status_http():
 
 @app.route('/hw_proxy/static/escpos/images/<path:path>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 def get_image(path=None):
-    print "coincoin"
-    
     return app.send_static_file(os.path.join('escpos/images/', path))
 
 @app.route('/hw_proxy/status_json', methods=['POST', 'GET', 'PUT', 'OPTIONS'])

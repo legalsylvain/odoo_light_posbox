@@ -52,7 +52,6 @@ language.install(unicode = True)
 from . import printer
 from . import supported_devices
 
-_image_extension = '.png'
 _logger = logging.getLogger(__name__)
 
 class EscposDriver(Thread):
@@ -60,8 +59,7 @@ class EscposDriver(Thread):
         Thread.__init__(self)
         self.queue = Queue()
         self.lock  = Lock()
-        self.image_name = None
-        print "image_name %s 0" %(self.image_name)
+        self.vendor_product = None
         self.status = {'status':'connecting', 'messages':[]}
 
     def supported_devices(self):
@@ -127,38 +125,33 @@ class EscposDriver(Thread):
                 self.start()
     
     def get_escpos_printer(self):
+        print "driver::get_escpos_printer"
         try:
             printers = self.connected_usb_devices()
             if len(printers) > 0:
                 self.set_status(
                     'connected',
                     _(u'Connected to %s') %(printers[0]['name']))
-                self.image_name = str(printers[0]['vendor']) + '_' + str(printers[0]['product']) + _image_extension
-                print "image_name %s 3" %(self.image_name)
+                self.vendor_product = str(printers[0]['vendor']) + '_' + str(printers[0]['product'])
                 return printer.Usb(printers[0]['vendor'], printers[0]['product'])
             else:
                 self.set_status(
                     'disconnected',
                     _(u'Printer Not Found'))
-                print "image_name %s 1" %(self.image_name)
-                self.image_name = None
+                self.vendor_product = None
                 return None
         except Exception as e:
             self.set_status('error',str(e))
-            print "image_name %s 2" %(self.image_name)
-            self.image_name = None
+            self.vendor_product = None
             return None
 
     def get_status(self):
         self.push_task('status')
         return self.status
 
-    def get_image_name(self):
+    def get_vendor_product(self):
         self.push_task('status')
-        if self.image_name:
-            return 'escpos/images/' + self.image_name 
-        else: 
-            return None
+        return self.vendor_product
 
     def open_cashbox(self,printer):
         printer.cashdraw(2)
