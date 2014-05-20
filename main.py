@@ -28,6 +28,7 @@ import json
 import commands
 import logging
 import os
+import platform
 
 from flask import Flask
 from flask import render_template
@@ -69,56 +70,77 @@ def get_status():
         statuses[driver] = drivers[driver].get_status()
     return statuses
 
+# HTML Pages Route Section
+@app.route('/hw_proxy/index.html', methods=['GET'])
+@crossdomain(origin='*')
+def index_http():
+    return render_template('index.html')
+
+#TODO : improve : put a javascript call to this page.
+@app.route('/hw_proxy/print_status.html', methods=['GET'])
+@crossdomain(origin='*')
+def print_status_http():
+    printerDriver.push_task('printstatus')
+    return render_template('print_status.html')
+
+@app.route('/hw_proxy/status.html', methods=['GET'])
+@crossdomain(origin='*')
+def status_http():
+    statuses = {}
+    for driver in drivers:
+        tmp = drivers[driver].get_vendor_product()
+        if tmp: 
+            image = 'static/' + driver + '/images/' + tmp + _IMAGE_EXTENSION
+        else:
+            image = None
+        statuses[driver] = {
+            'state': drivers[driver].get_status(),
+            'image': image,
+        }
+    return render_template('status.html', statuses=statuses)
+
+@app.route('/hw_proxy/devices.html', methods=['GET'])
+@crossdomain(origin='*')
+def devices_http():
+    devices = commands.getoutput("lsusb").split('\n')
+    return render_template('devices.html', devices=devices)
+
+@app.route('/hw_proxy/system.html', methods=['GET'])
+@crossdomain(origin='*')
+def system_http():
+    system_info = []
+    system_info.append({
+        'name': _('OS - System'),'value': platform.system()})
+    system_info.append({
+        'name': _('OS - Release'),'value': platform.release()})
+    system_info.append({
+        'name': _('OS - Version'),'value': platform.version()})
+    system_info.append({
+        'name': _('OS - Machine'),'value': platform.machine()})
+
+    return render_template('system.html', system_info=system_info)
+
+# Images Route Section
+@app.route('/hw_proxy/static/escpos/images/<path:path>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+def escpos_image(path=None):
+    print path
+    return app.send_static_file(os.path.join('escpos/images/', path))
+
+
 # Generic Route Section
 @app.route('/hw_proxy/hello', methods=['GET'])
 @crossdomain(origin='*')
 def hello():
-    """ Simulate the behaviour of the function /hw_proxy/hello
-    File Name: Odoo(V8) /addons/hw_proxy/controllers/main.py
-    Function Name: Proxy::hello()
-    """
-    print "****** request /hw_proxy/hello/ ******"
     return make_response('ping')
 
 @app.route('/hw_proxy/handshake', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
 def handshake():
-    """ Simulate the behaviour of the function /hw_proxy/handshake
-    File Name: Odoo(V8) /addons/hw_proxy/controllers/main.py
-    Function Name: Proxy::handshake()
-    """
-    print "****** request /hw_proxy/handshake/ ******"
     return jsonify(jsonrpc='2.0', result = True)
-
-@app.route('/hw_proxy/status', methods=['GET'])
-@crossdomain(origin='*')
-def status_http():
-    """ Simulate the behaviour of the function /hw_proxy/status
-    File Name: Odoo(V8) /addons/hw_proxy/controllers/main.py
-    Function Name: Proxy::status_http()
-    """
-    statuses = {}
-    for driver in drivers:
-        statuses[driver] = {
-            'state': drivers[driver].get_status(),
-            'image': 'static/' + driver + '/images/' + drivers[driver].get_vendor_product() + _IMAGE_EXTENSION,
-        }
-    devices = commands.getoutput("lsusb").split('\n')
-    return render_template(
-        'status.html', statuses=statuses, devices=devices)
-
-@app.route('/hw_proxy/static/escpos/images/<path:path>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-def get_image(path=None):
-    return app.send_static_file(os.path.join('escpos/images/', path))
 
 @app.route('/hw_proxy/status_json', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
 def status_json():
-    """ Simulate the behaviour of the function /hw_proxy/status_json
-    File Name: Odoo(V8) /addons/hw_proxy/controllers/main.py
-    Function Name: Proxy::status_json()
-    """
-    print "****** request /hw_proxy/status_json/ ******"
     statuses = {}
     for driver in drivers:
         statuses[driver] = drivers[driver].get_status()
@@ -150,7 +172,7 @@ def print_xml_receipt():
 
 ### Run application
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=app.config['FLASK_PORT'], debug=True)
 #    app.run()
 
 

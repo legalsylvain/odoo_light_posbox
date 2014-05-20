@@ -25,7 +25,6 @@ import os
 import os.path
 import io
 import base64
-import openerp
 import time
 import random
 import math
@@ -39,6 +38,7 @@ import gettext
 from threading import Thread, Lock
 from Queue import Queue, Empty
 from PIL import Image
+from pif import get_public_ip
 
 # SLG : TODO change the incorrect import
 import settings
@@ -211,16 +211,14 @@ class EscposDriver(Thread):
         self.queue.put((time.time(),task,data))
 
     def print_status(self,eprint):
-        localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
-        ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
-        ips =  [ ip for ip in ips if ip not in localips ] 
+        ip = get_public_ip()
         eprint.text('\n\n')
         eprint.set(align='center',type='b',height=2,width=2)
         eprint.text(_(u'PosBox Status'))
         eprint.text('\n\n')
         eprint.set(align='center')
 
-        if len(ips) == 0:
+        if not ip:
             msg = _(
                 """ERROR: Could not connect to LAN\n\n"""
                 """Please check that the PosBox is correc-\n"""
@@ -228,16 +226,10 @@ class EscposDriver(Thread):
                 """ that the LAN is setup with DHCP, and\n"""
                 """that network addresses are available""")
             eprint.text(msg)
-        elif len(ips) == 1:
-            eprint.text(_(u'IP Address:') + '\n'+ips[0]+'\n')
         else:
-            eprint.text(_(u'IP Addresses:') + '\n')
-            for ip in ips:
-                eprint.text(ip+'\n')
-
-        if len(ips) >= 1:
+            eprint.text(_(u'IP Address:') + '\n'+ ip +'\n')
             eprint.text('\n' + _(u'Homepage:') + '\n')
-            eprint.text('http://'+ips[0]+':8069\n')
+            eprint.text('http://'+ip+':' + str(settings.FLASK_PORT) + '\n')
 
         eprint.text('\n\n')
         eprint.cut()

@@ -31,3 +31,6 @@ BABEL_DEFAULT_TIMEZONE = 'UTC'
 # Set to True if you want that the PosBox edit a status receipt
 # when the Light-PosBox Software start
 PRINT_STATUS_START = False
+
+# Set The port of the webserver
+FLASK_PORT = 8080
